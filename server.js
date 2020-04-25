@@ -1,4 +1,4 @@
-var mysql = require("mysql");
+const mysql = require("mysql");
 
 // Create the connection information fo the SQL database
 var connection = mysql.createConnection({
