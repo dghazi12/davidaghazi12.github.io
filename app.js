@@ -1,98 +1,79 @@
 const connection = require('./server.js')
 const inquirer = require("inquirer");
 
-//View all all roles
-// Add role
-//Remove role
+function start(){
 
-function employeeStart() {
-    inquirer
-        .prompt({
+inquirer
+    .prompt([{
 
-            type: "list",
-            message: "What would you like to do?",
-            name: "start",
-            choices: ["View departments", "Add department", "View role", "Add role", "View all employees", "Add employees", "View all employees by manager", "Update employe managers", "View all employees by department", "Delete"]
+        type: "list",
+        message: "What would you like to do?",
+        name: "start",
+        choices: ["View departments", "Add department", "View role", "Add role", "View all employees", "Add employee", "Update employee roles", "Exit", new inquirer.Separator()]
 
-        })
-        .then(function (data) {
+    }])
+    .then(function (data) {
 
-            let test = data.start
+        switch (data.start) {
 
-            switch (test) {
+            case "View departments":
 
-                case "View departments":
+                department()
 
-                    allDepartments()
-
-                    break;
-
-                case "Add department":
-
-                    console.log(test)
-
-                    break;
-                
-                case "View role":
-
-                    console.log(test)
-
-                    break;
-
-                case "Add role":
-
-                    console.log(test)
-
-                    break;
-
-                case "View all employees":
-
-                    console.log(test)
-    
                 break;
 
-                case "Add employees":
+            case "Add department":
 
-                    console.log(test)
-    
+                addDepartment()
+
                 break;
 
+            case "View role":
 
-                case "View all employees by manager":
+                role()
 
-                    console.log(test)
-    
                 break;
 
-                case "Update employe managers":
+            case "Add role":
 
-                    console.log(test)
-    
+                addRole()
+
                 break;
 
-                case "View all employees by department":
+            case "View all employees":
 
-                    console.log(test)
-    
+                employee()
+
                 break;
 
-                case "Delete":
+            case "Add employee":
 
-                    console.log(test)
-    
+                addEmployee()
+
                 break;
-                
-            };
 
-        employeeStart()
+            case "Update employee roles":
+
+                updateRoles()
+
+                break;
+
+            case "Exit":
+
+                connection.end();
+
+                break;
+
+        };
 
     })
+
 }
 
-employeeStart()
+start();
 
-function allDepartments() {
-    var query = "SELECT * FROM department";
+function department() {
+    let query = "SELECT * FROM department";
     connection.query(query, function (err, res) {
 
         if (err) throw err;
@@ -102,45 +83,161 @@ function allDepartments() {
     });
 }
 
+function addDepartment() {
 
+    inquirer
+        .prompt([{
 
+            message: "What is the name of the new department?",
+            name: "department",
 
+        }])
+        .then(function (data) {
 
+            connection.query(
+                "INSERT INTO department SET ?",
+                {
+                    deparment_name: data.department.toUpperCase()
+                },
+                function (err) {
+                    if (err) throw err;
+                    console.log("The new department was created successfully!");
+                }
+            );
 
- // View department
-    //List all departments
+            department();
 
-  //Add department
-    //What is the name of the department
+        });
+}
 
-  //View/Update role
-    //List of all employees
-    //Select employee and update role
+function role() {
+    let query = "SELECT * FROM e_role";
+    connection.query(query, function (err, res) {
 
-  //Add role
-    //List all the name of employees
-    //Selecte employee and add a role
+        if (err) throw err;
 
-      // View all employees
-    // A TABLE LOGGING ALL OF THE EMPLOYEES
+        console.table(res)
 
-  // Add Employee
-    //Ask for employee first name (input)
-    //Ask for employee last name (input)
-    //SHow a list of departments to be inserted into
-    //Ask who is employees manager
+    });
+}
 
-      // View all employees by manager
-    //Select which manager you would like to view the employees in a list
-    //Show the list of employees under the manager
+async function addRole() {
 
-  //Update employee managers
-    //List all employees
-    //Select employee to update
-    //List all name of managers and update
+    try {
 
-  // Delete departmetns, roles, and employees
-    //List Department, roles or employees
-    //List Selection
-    //Let them pick which one to delete
+        const { role } = await inquirer.prompt({
+            message: "What is the title of the new role to be added?",
+            name: "role"
+        });
 
+        const { salary } = await inquirer.prompt({
+            message: "What is the salary?",
+            name: "salary"
+        });
+
+        connection.query(
+            "INSERT INTO e_role SET ?",
+            {
+                title: (`${role}`.toUpperCase()),
+                salary: (`${salary}`)
+            },
+            function (err) {
+                if (err) throw err;
+                console.log("Role has been updated!");
+            }
+        );
+
+    } catch (err) {
+        console.log(err);
+    }
+
+    role()
+
+}
+
+function employee() {
+    let query = "SELECT * FROM employee";
+    connection.query(query, function (err, res) {
+
+        if (err) throw err;
+
+        console.table(res)
+
+    });
+}
+
+async function addEmployee() {
+
+    try {
+
+        const { first } = await inquirer.prompt({
+            message: "What is the first name?",
+            name: "first",
+        });
+
+        const { last } = await inquirer.prompt({
+            message: "What is the last name?",
+            name: "last"
+        });
+
+        connection.query(
+            "INSERT INTO employee SET ?",
+            {
+                first_name: (`${first}`.toUpperCase()),
+                last_name: (`${last}`.toUpperCase())
+            },
+            function (err) {
+                if (err) throw err;
+                console.log("Employee has been added!");
+            }
+        );
+
+    } catch (err) {
+        console.log(err);
+    }
+
+    addRole()
+
+}
+
+async function updateRoles() {
+
+    employee()
+
+    try {
+
+        const { id } = await inquirer.prompt({
+            message: "What is the id of the employee who's role you would like to update?",
+            name: "id"
+        });
+
+        const { role123 } = await inquirer.prompt({
+            message: "What is the title of the new role to be added?",
+            name: "role123"
+        });
+
+        const { salary } = await inquirer.prompt({
+            message: "What is the salary?",
+            name: "salary"
+        });
+
+        connection.query(
+            "UPDATE e_role SET ? WHERE ?",
+            {
+                title: (`${role123}`.toUpperCase()),
+                salary: (`${salary}`)
+            },
+            {
+                id: (`${id}`)
+            },
+            function (err) {
+                if (err) throw err;
+                console.log("Role has been updated!");
+            }
+        );
+
+    } catch (err) {
+        console.log(err);
+    }
+
+}

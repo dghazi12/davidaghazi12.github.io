@@ -1,7 +1,7 @@
 const mysql = require("mysql");
 
 // Create the connection information fo the SQL database
-var connection = mysql.createConnection({
+const connection = mysql.createConnection({
   host: "localhost",
 
   // Your port
@@ -11,7 +11,7 @@ var connection = mysql.createConnection({
   user: "root",
 
   // Your password
-  password: "",
+  password: "pats2012",
   database: "employeeTracker_DB"
 });
 
