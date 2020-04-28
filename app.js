@@ -1,81 +1,62 @@
 const connection = require('./server.js')
 const inquirer = require("inquirer");
 
-function start(){
+function start() {
 
-inquirer
-    .prompt([{
+    inquirer
+        .prompt([{
 
-        type: "list",
-        message: "What would you like to do?",
-        name: "start",
-        choices: [  "View departments", 
-                    "Add department", 
-                    "View role", 
-                    "Add role", 
-                    "View all employees", 
-                    "Add employee", 
-                    "Update employee roles", 
-                    "Exit", 
-                    new inquirer.Separator()]
+            type: "list",
+            message: "What would you like to do?",
+            name: "start",
+            choices: ["View departments",
+                "Add department",
+                "View role",
+                "Add role",
+                "View all employees",
+                "Add employee",
+                "Update employee roles",
+                "Exit",
+                new inquirer.Separator()]
+        }])
+        .then(function (data) {
 
-    }])
-    .then(function (data) {
+            switch (data.start) {
 
-        switch (data.start) {
+                case "View departments":
+                    department()
+                    break;
 
-            case "View departments":
+                case "Add department":
+                    addDepartment()
+                    break;
 
-                department()
+                case "View role":
+                    role()
+                    break;
 
-                break;
+                case "Add role":
+                    addRole()
+                    break;
 
-            case "Add department":
+                case "View all employees":
+                    employee()
+                    break;
 
-                addDepartment()
+                case "Add employee":
+                    addEmployee()
+                    break;
 
-                break;
+                case "Update employee roles":
+                    updateRoles()
+                    break;
 
-            case "View role":
+                case "Exit":
+                    connection.end();
+                    break;
 
-                role()
-
-                break;
-
-            case "Add role":
-
-                addRole()
-
-                break;
-
-            case "View all employees":
-
-                employee()
-
-                break;
-
-            case "Add employee":
-
-                addEmployee()
-
-                break;
-
-            case "Update employee roles":
-
-                updateRoles()
-
-                break;
-
-            case "Exit":
-
-                connection.end();
-
-                break;
-
-        };
-
-    })
-
+            };
+        })
 }
 
 start();
@@ -87,11 +68,9 @@ function department() {
         if (err) throw err;
 
         console.log("HERE IS A LIST OF ALL THE DEPARTMENTS: ")
-
         console.table(res)
 
     });
-
 }
 
 function addDepartment() {
@@ -122,6 +101,7 @@ function addDepartment() {
 }
 
 function role() {
+
     let query = "SELECT * FROM e_role";
     connection.query(query, function (err, res) {
 
@@ -160,7 +140,9 @@ async function addRole() {
         );
 
     } catch (err) {
+
         console.log(err);
+
     }
 
     role()
@@ -168,6 +150,7 @@ async function addRole() {
 }
 
 function employee() {
+
     let query = "SELECT * FROM employee LEFT JOIN e_role ON (employee.id = e_role.id)";
     connection.query(query, function (err, res) {
 
@@ -208,7 +191,9 @@ async function addEmployee() {
         );
 
     } catch (err) {
+
         console.log(err);
+    
     }
 
 }
@@ -220,11 +205,11 @@ function updateRoles() {
             message: "Enter the ID of the employee you want to update.",
             type: "number",
             name: "id"
-        }, 
+        },
         {
             message: "What is the updated title?",
             type: "input",
-            name: "title" 
+            name: "title"
         },
         {
             message: "What is the updated salary?",
@@ -238,5 +223,4 @@ function updateRoles() {
             employee();
         })
     })
-
 }
