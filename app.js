@@ -25,6 +25,7 @@ function start() {
 
                 case "View departments":
                     department()
+                    connection.end()
                     break;
 
                 case "Add department":
@@ -33,6 +34,7 @@ function start() {
 
                 case "View role":
                     role()
+                    connection.end()
                     break;
 
                 case "Add role":
@@ -41,6 +43,7 @@ function start() {
 
                 case "View all employees":
                     employee()
+                    connection.end()
                     break;
 
                 case "Add employee":
@@ -61,7 +64,7 @@ function start() {
 
 }
 
-start();
+start()
 
 function department() {
 
@@ -96,6 +99,7 @@ function addDepartment() {
                 function (err) {
                     if (err) throw err;
                     console.log(data.department.toUpperCase() + " HAS BEEN ADDED TO THE LIST OF DEPARTMENTS!");
+
                 }
             );
 
@@ -142,6 +146,9 @@ async function addRole() {
             function (err) {
                 if (err) throw err;
                 console.log("ROLE " + `${role}`.toUpperCase() + " HAS BEEN ADDED!");
+
+                start()
+
             }
         );
 
@@ -194,6 +201,7 @@ async function addEmployee() {
             function (err) {
                 if (err) throw err;
                 console.log("EMPLOYEE " + `${first}`.toUpperCase() + ` ${last}`.toUpperCase() + " HAS BEEN ADDED!");
+
             }
         );
 
@@ -228,6 +236,7 @@ function updateRoles() {
         connection.query("UPDATE e_role SET title = ?, salary = ? WHERE id = ?", [response.title.toUpperCase(), response.salary, response.id], function (err, data) {
             console.log("EMPLOYEE " + response.id + " HAS BEEN UPDATED!")
             employee();
+
         })
 
     })
