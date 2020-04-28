@@ -149,11 +149,12 @@ async function addRole() {
 
 }
 
-// connection.query("SELECT employees.first_name, employees.last_name, roles.title AS \"role\", managers.first_name AS \"manager\" FROM employees LEFT JOIN roles ON employees.role_id = roles.id LEFT JOIN employees managers ON employees.manager_id = managers.id GROUP BY employees.id"
+// connection.query("SELECT employees.first_name, employees.last_name, roles.title AS \"role\", managers.first_name AS \"manager\" 
+// FROM employees LEFT JOIN roles ON employees.role_id = roles.id LEFT JOIN employees managers ON employees.manager_id = managers.id GROUP BY employees.id"
 
 function employee() {
 
-    let query = "SELECT * FROM employee LEFT JOIN e_role ON (employee.id = e_role.id)";
+    let query = "SELECT * FROM employee LEFT JOIN e_role ON (employee.id = e_role.id) LEFT JOIN department ON (employee.id = department.id) GROUP BY employee.id";
     connection.query(query, function (err, res) {
 
         if (err) throw err;
