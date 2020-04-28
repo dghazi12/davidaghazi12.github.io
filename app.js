@@ -9,7 +9,15 @@ inquirer
         type: "list",
         message: "What would you like to do?",
         name: "start",
-        choices: ["View departments", "Add department", "View role", "Add role", "View all employees", "Add employee", "Update employee roles", "Exit", new inquirer.Separator()]
+        choices: [  "View departments", 
+                    "Add department", 
+                    "View role", 
+                    "Add role", 
+                    "View all employees", 
+                    "Add employee", 
+                    "Update employee roles", 
+                    "Exit", 
+                    new inquirer.Separator()]
 
     }])
     .then(function (data) {
@@ -81,6 +89,7 @@ function department() {
         console.table(res)
 
     });
+
 }
 
 function addDepartment() {
@@ -97,7 +106,7 @@ function addDepartment() {
             connection.query(
                 "INSERT INTO department SET ?",
                 {
-                    deparment_name: data.department.toUpperCase()
+                    department_name: data.department.toUpperCase()
                 },
                 function (err) {
                     if (err) throw err;
@@ -156,7 +165,7 @@ async function addRole() {
 }
 
 function employee() {
-    let query = "SELECT * FROM employee";
+    let query = "SELECT * FROM employee LEFT JOIN e_role ON (employee.id = e_role.id)";
     connection.query(query, function (err, res) {
 
         if (err) throw err;
@@ -200,44 +209,29 @@ async function addEmployee() {
 
 }
 
-async function updateRoles() {
+function updateRoles() {
 
-    employee()
-
-    try {
-
-        const { id } = await inquirer.prompt({
-            message: "What is the id of the employee who's role you would like to update?",
+    inquirer.prompt([
+        {
+            message: "Enter the ID of the employee you want to update.",
+            type: "number",
             name: "id"
-        });
-
-        const { role123 } = await inquirer.prompt({
-            message: "What is the title of the new role to be added?",
-            name: "role123"
-        });
-
-        const { salary } = await inquirer.prompt({
-            message: "What is the salary?",
+        }, 
+        {
+            message: "What is the updated title?",
+            type: "input",
+            name: "title" 
+        },
+        {
+            message: "What is the updated salary?",
+            type: "number",
             name: "salary"
-        });
+        }
+    ]).then(function (response) {
 
-        connection.query(
-            "UPDATE e_role SET ? WHERE ?",
-            {
-                title: (`${role123}`.toUpperCase()),
-                salary: (`${salary}`)
-            },
-            {
-                id: (`${id}`)
-            },
-            function (err) {
-                if (err) throw err;
-                console.log("Role has been updated!");
-            }
-        );
-
-    } catch (err) {
-        console.log(err);
-    }
+        connection.query("UPDATE e_role SET title = ?, salary = ? WHERE id = ?", [response.title.toUpperCase(), response.salary, response.id], function (err, data) {
+            console.table(data);
+        })
+    })
 
 }
