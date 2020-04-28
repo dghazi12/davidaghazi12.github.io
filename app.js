@@ -56,12 +56,15 @@ function start() {
                     break;
 
             };
+
         })
+
 }
 
 start();
 
 function department() {
+
     let query = "SELECT * FROM department";
     connection.query(query, function (err, res) {
 
@@ -71,6 +74,7 @@ function department() {
         console.table(res)
 
     });
+
 }
 
 function addDepartment() {
@@ -98,6 +102,7 @@ function addDepartment() {
             department();
 
         });
+
 }
 
 function role() {
@@ -111,6 +116,7 @@ function role() {
         console.table(res)
 
     });
+
 }
 
 async function addRole() {
@@ -149,9 +155,6 @@ async function addRole() {
 
 }
 
-// connection.query("SELECT employees.first_name, employees.last_name, roles.title AS \"role\", managers.first_name AS \"manager\" 
-// FROM employees LEFT JOIN roles ON employees.role_id = roles.id LEFT JOIN employees managers ON employees.manager_id = managers.id GROUP BY employees.id"
-
 function employee() {
 
     let query = "SELECT * FROM employee LEFT JOIN e_role ON (employee.id = e_role.id) LEFT JOIN department ON (employee.id = department.id) GROUP BY employee.id";
@@ -163,6 +166,7 @@ function employee() {
         console.table(res)
 
     });
+
 }
 
 async function addEmployee() {
@@ -196,7 +200,7 @@ async function addEmployee() {
     } catch (err) {
 
         console.log(err);
-    
+
     }
 
 }
@@ -225,5 +229,7 @@ function updateRoles() {
             console.log("EMPLOYEE " + response.id + " HAS BEEN UPDATED!")
             employee();
         })
+
     })
+
 }
