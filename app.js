@@ -86,6 +86,8 @@ function department() {
 
         if (err) throw err;
 
+        console.log("HERE IS A LIST OF ALL THE DEPARTMENTS: ")
+
         console.table(res)
 
     });
@@ -110,7 +112,7 @@ function addDepartment() {
                 },
                 function (err) {
                     if (err) throw err;
-                    console.log("The new department was created successfully!");
+                    console.log(data.department.toUpperCase() + " HAS BEEN ADDED TO THE LIST OF DEPARTMENTS!");
                 }
             );
 
@@ -125,6 +127,7 @@ function role() {
 
         if (err) throw err;
 
+        console.log("HERE IS A LIST OF ALL THE ROLES: ")
         console.table(res)
 
     });
@@ -152,7 +155,7 @@ async function addRole() {
             },
             function (err) {
                 if (err) throw err;
-                console.log("Role has been updated!");
+                console.log("ROLE " + `${role}`.toUpperCase() + " HAS BEEN ADDED!");
             }
         );
 
@@ -170,6 +173,7 @@ function employee() {
 
         if (err) throw err;
 
+        console.log("HERE IS A LIST OF ALL THE EMPLOYEES: ")
         console.table(res)
 
     });
@@ -189,6 +193,8 @@ async function addEmployee() {
             name: "last"
         });
 
+        addRole()
+
         connection.query(
             "INSERT INTO employee SET ?",
             {
@@ -197,15 +203,13 @@ async function addEmployee() {
             },
             function (err) {
                 if (err) throw err;
-                console.log("Employee has been added!");
+                console.log("EMPLOYEE " + `${first}`.toUpperCase() + ` ${last}`.toUpperCase() + " HAS BEEN ADDED!");
             }
         );
 
     } catch (err) {
         console.log(err);
     }
-
-    addRole()
 
 }
 
@@ -230,7 +234,8 @@ function updateRoles() {
     ]).then(function (response) {
 
         connection.query("UPDATE e_role SET title = ?, salary = ? WHERE id = ?", [response.title.toUpperCase(), response.salary, response.id], function (err, data) {
-            console.table(data);
+            console.log("EMPLOYEE " + response.id + " HAS BEEN UPDATED!")
+            employee();
         })
     })
 
