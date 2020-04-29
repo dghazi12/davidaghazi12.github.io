@@ -51,8 +51,8 @@ Build a command-line application that at a minimum allows the user to:
 
 ## Preview
 
-![](images/example.gif)
+![](images/EmployeeTracker.gif)
 
 ## Image
 
-![](images/example.png)
+![](images/EmployeesPicture.png)
