@@ -43,7 +43,6 @@ function start() {
 
                 case "View all employees":
                     employee()
-                    connection.end()
                     break;
 
                 case "Add employee":
@@ -105,6 +104,8 @@ function addDepartment() {
 
             department();
 
+            connection.end()
+
         });
 
 }
@@ -147,8 +148,6 @@ async function addRole() {
                 if (err) throw err;
                 console.log("ROLE " + `${role}`.toUpperCase() + " HAS BEEN ADDED!");
 
-                start()
-
             }
         );
 
@@ -159,6 +158,7 @@ async function addRole() {
     }
 
     role()
+    connection.end()
 
 }
 
@@ -173,6 +173,8 @@ function employee() {
         console.table(res)
 
     });
+
+    connection.end()
 
 }
 
@@ -219,7 +221,8 @@ function updateRoles() {
         {
             message: "Enter the ID of the employee you want to update.",
             type: "number",
-            name: "id"
+            name: "id",
+            
         },
         {
             message: "What is the updated title?",

@@ -52,3 +52,7 @@ Build a command-line application that at a minimum allows the user to:
 ## Preview
 
 ![](images/example.gif)
+
+## Image
+
+![](images/example.png)
